@@ -1,5 +1,8 @@
 {
   "name": "rock-paper-scissors",
+  "scripts": {
+    "start": "node index.js"
+  },
   "version": "0.0.1",
   "description": "A simple rock-paper-scissors online game",
   "type": "commonjs",
