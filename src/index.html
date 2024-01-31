@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Rock Paper scissors</title>
+    <style>
+    img {
+        width: 90%;
+        height: auto
+      }
+    td {
+      text-align: center;
+    }
+    </style>
+    <script type="text/javascript">
+    
+    function who_wins (me, opponent){
+      if (me==opponent){
+        return "Draw";
+      }
+      else if ((me=='rock' && opponent =='scissors') || (me=='paper' && opponent =='rock') || (me=='scissors' && opponent =='paper')) {
+        return "You won"
+      } else {
+        return "You lost"
+      }
+    
+    }
+    function make_table (choices_me, choices_opponent) {
+      if (choices_me.length != choices_me.length) return "Something funky with the lengths"
+      var i = 0;
+      table_str = '<table align = "center" ><thead> <tr> <th>You</th> <th>Opponent</th></tr></thead><tbody>';
+      for (const my_choice of choices_me) {
+        other_choice = choices_opponent[i];
+        i+=1;
+        console.log('inside make_table', my_choice, other_choice);
+        table_str += '<tr><td>'+my_choice[0].toUpperCase()+'</td><td>'+other_choice[0].toUpperCase()+'</tr>'
+      }
+      table_str += "</tbody></table>"
+      console.log(table_str)
+      return table_str
+    }
+
+    </script
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form">
+        Your name: <input type="text" id="username"
+                         placeholder="Your name"
+                         size="20">
+        <br><br>
+        Game ID: <input type="number" id="game_ID" placeholder="Game ID"
+                         size="20"><br><br>
+        <button name="click">
+          Start!
+        </button>
+    </form>
+    
+    <div id="waiting_text" hidden="hidden">Waiting for your friend to join...</div>
+    <div id="playing_text" hidden="hidden">dummy</div>
+    
+    <table id = "play_table" border=0 width=1000 style="border-collapse:collapse;" cellspacing="0" cellpadding="0" hidden="hidden">
+      <tr>
+        <td id = 'summary_table' width=250 rowspan=2></td>
+        <td width=250><img id = 'img_rock' src = "imgs/rock.png" onClick = "click_image(this)"></td>
+        <td width=250><img id = 'img_paper' src = "imgs/paper.png" onClick = "click_image(this)"></td>
+        <td width=250><img id = 'img_scissors' src = "imgs/scissors.png" onClick = "click_image(this)"></td>
+      </tr>
+      <tr>
+        <td id = 'win_lose'> </td>
+        <td><img id = 'opponent_choice' src = "imgs/paper.png" hidden="hidden"></td>
+        <td><button id = 'again' name="again" onClick = "play_again()">Play Again</button></td>
+      </tr>
+    </table>
+    
+	  <script src="/socket.io/socket.io.js"></script>
+	  <script>
+	    var user_obj = null;
+	    var choices_mine = [];
+	    var choices_opponent = [];
+	    const socket = io();
+
+	    const form = document.getElementById('form');
+	    const username = document.getElementById('username');
+	    const game_id = document.getElementById('game_ID');
+	    console.log(username.value)
+	    
+      form.addEventListener('submit', (e) => {
+		  e.preventDefault();
+		  if ((username.value) && (game_id.value)) {
+		    user_obj = {
+            'username': username.value,
+            "game_id": game_id.value
+          };
+		    socket.emit('new_user', user_obj);
+		    document.getElementById('waiting_text').removeAttribute("hidden");
+		  }
+	    });
+	    
+	    //Now we wait for another player to join
+	   var opponent = null
+     socket.on('found_match', (arg) => {
+       document.getElementById('waiting_text').setAttribute("hidden", "hidden");
+       document.getElementById('playing_text').removeAttribute("hidden");
+       document.getElementById('play_table').removeAttribute("hidden");
+       opponent = arg;
+       document.getElementById('playing_text').innerHTML = 'Playing with your friend: "'+opponent+'"'
+       console.log('matching with ' + opponent);
+     });
+     
+     
+      //Now it's time for the user to make a choice
+      //The choice is sent to the server, which gathers the one of the opponent
+    var choice = null;
+    var opponent_choice = null;
+    function click_image(img) {
+      if (choice == null){
+        choice = img.getAttribute("src").split('/')[1].split('.')[0];
+        socket.emit('choice', choice);
+        console.log('Chosen ' + choice);
+        img.border = 5
+      }
+    }
+    
+      //Gathering the opponent response
+    socket.on('opponent_response', (arg) => {
+      document.getElementById("opponent_choice").setAttribute("src", "imgs/"+arg+".png");
+      document.getElementById("opponent_choice").removeAttribute("hidden");
+      opponent_choice = arg;
+      choices_opponent.push(arg);
+      console.log('Opponent '+arg)
+      choices_mine.push(choice)
+
+      document.getElementById('win_lose').innerHTML = who_wins(choice, arg)
+      console.log('Before make table: ', choices_mine, choices_opponent);
+      document.getElementById('summary_table').innerHTML = make_table(choices_mine, choices_opponent);
+     });
+     
+      //Getting ready to play again
+    function play_again (){
+      if (opponent_choice == null) return
+      document.getElementById("opponent_choice").setAttribute("hidden", "hidden");
+      document.getElementById('win_lose').innerHTML = ''
+      document.getElementById('img_'+choice).border = 0;
+      choice = null;
+      opponent_choice = null;
+      //socket.emit('again')
+    }
+     
+       //Getting ready to be disconnected if the other guy dies...
+    socket.on('close', () => {
+      console.log('My friend died!!')
+      opponent = null;
+      document.getElementById('summary_table').innerHTML = ''
+      document.getElementById("opponent_choice").setAttribute("hidden", "hidden");
+      document.getElementById('win_lose').innerHTML = ''
+      document.getElementById('img_'+choice).border = 0;
+      choice = null;
+      opponent_choice = null;
+      choices_mine = []; choices_opponent = [];
+      document.getElementById('waiting_text').removeAttribute("hidden");
+      document.getElementById('playing_text').setAttribute("hidden", "hidden");
+      document.getElementById('play_table').setAttribute("hidden", "hidden");
+   });
+     
+	  </script>
+
+    
+
+  </body>
+</html>
