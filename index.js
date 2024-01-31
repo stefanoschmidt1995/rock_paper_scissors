@@ -164,4 +164,3 @@ server.listen(port, (error) => {
   if (!error) console.log("Server running at http://localhost:" + port);
   else console.log("Can't star the server. An error occurred: ", error);
 });
-
