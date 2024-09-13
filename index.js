@@ -54,6 +54,7 @@ function printPlayers(listOfPlayers) {
 //	https://expressjs.com/en/api.html
 const app = express();
 app.use("/imgs", express.static("imgs")); // To load the images
+app.use("/css", express.static("css")); // To load the css file
 const server = createServer(app); //This is a std server
 const io = new Server(server); //This is the socket.io server. Apparently it adds some functionalities to the normal server
 

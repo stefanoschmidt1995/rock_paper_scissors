@@ -3,15 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Rock Paper scissors</title>
-    <style>
-    img {
-        width: 90%;
-        height: auto
-      }
-    td {
-      text-align: center;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript">
     
     function who_wins (me, opponent){
@@ -32,7 +24,7 @@
       for (const my_choice of choices_me) {
         other_choice = choices_opponent[i];
         i+=1;
-        console.log('inside make_table', my_choice, other_choice);
+        //console.log('inside make_table', my_choice, other_choice);
         table_str += '<tr><td>'+my_choice[0].toUpperCase()+'</td><td>'+other_choice[0].toUpperCase()+'</tr>'
       }
       table_str += "</tbody></table>"
@@ -40,8 +32,9 @@
       return table_str
     }
 
-    </script
+    </script>
   </head>
+  
   <body>
     <ul id="messages"></ul>
     <form id="form">
@@ -51,30 +44,45 @@
         <br><br>
         Game ID: <input type="number" id="game_ID" placeholder="Game ID"
                          size="20"><br><br>
-        <button name="click">
-          Start!
-        </button>
+        <button name="click" class="w3-button w3-block w3-dark-grey">Start!</button>
+        <button id = 'again' name="again" hidden="hidden" onClick = "play_again()">Play Again</button>
     </form>
     
     <div id="waiting_text" hidden="hidden">Waiting for your friend to join...</div>
-    <div id="playing_text" hidden="hidden">dummy</div>
+    <div id="playing_text" hidden="hidden">Playing with your friend: </div>
     
-    <table id = "play_table" border=0 width=1000 style="border-collapse:collapse;" cellspacing="0" cellpadding="0" hidden="hidden">
+
+
+    <div width=90%, align = 'left'>
+    <table id = "play_table" border=0 style="border-collapse:collapse" cellspacing="0" cellpadding="0" hidden="hidden">
       <tr>
-        <td id = 'summary_table' width=250 rowspan=2></td>
-        <td width=250><img id = 'img_rock' src = "imgs/rock.png" onClick = "click_image(this)"></td>
-        <td width=250><img id = 'img_paper' src = "imgs/paper.png" onClick = "click_image(this)"></td>
-        <td width=250><img id = 'img_scissors' src = "imgs/scissors.png" onClick = "click_image(this)"></td>
+        <td id = 'summary_table' width=16% rowspan=2></td>
+        <td width=28%><img id = 'img_rock' src = "imgs/rock.png" onClick = "click_image(this)" class = "rps-img"></td>
+        <td width=28%><img id = 'img_paper' src = "imgs/paper.png" onClick = "click_image(this)" class = "rps-img"></td>
+        <td width=28%><img id = 'img_scissors' src = "imgs/scissors.png" onClick = "click_image(this)" class = "rps-img"></td>
       </tr>
       <tr>
         <td id = 'win_lose'> </td>
-        <td><img id = 'opponent_choice' src = "imgs/paper.png" hidden="hidden"></td>
-        <td><button id = 'again' name="again" onClick = "play_again()">Play Again</button></td>
+        <td><img id = 'opponent_choice' src = "imgs/paper.png" hidden="hidden" class = "rps-img"></td>
+        <td></td>
       </tr>
     </table>
+    </div>
     
 	  <script src="/socket.io/socket.io.js"></script>
 	  <script>
+	  	var debug = true;
+	  	if (debug){
+	  	  document.getElementById('waiting_text').removeAttribute("hidden");
+	  	  document.getElementById('playing_text').removeAttribute("hidden");
+	  	  document.getElementById('play_table').removeAttribute("hidden");
+	  	  document.getElementById('again').removeAttribute("hidden");
+	  	  document.getElementById('summary_table').innerHTML = make_table(['rock', 'scissors', 'rock'], ['rock', 'paper', 'scissors']);
+	  	  document.getElementById("opponent_choice").removeAttribute("hidden");
+	  	  document.getElementById('win_lose').removeAttribute("hidden");
+	  	  document.getElementById('win_lose').innerHTML = who_wins('rock', 'scissors');
+	  	}
+	  
 	    var user_obj = null;
 	    var choices_mine = [];
 	    var choices_opponent = [];
@@ -103,6 +111,7 @@
        document.getElementById('waiting_text').setAttribute("hidden", "hidden");
        document.getElementById('playing_text').removeAttribute("hidden");
        document.getElementById('play_table').removeAttribute("hidden");
+       document.getElementById('again').removeAttribute("hidden");
        opponent = arg;
        document.getElementById('playing_text').innerHTML = 'Playing with your friend: "'+opponent+'"'
        console.log('matching with ' + opponent);
@@ -161,6 +170,7 @@
       document.getElementById('waiting_text').removeAttribute("hidden");
       document.getElementById('playing_text').setAttribute("hidden", "hidden");
       document.getElementById('play_table').setAttribute("hidden", "hidden");
+      document.getElementById('again').setAttribute("hidden", "hidden");
    });
      
 	  </script>
