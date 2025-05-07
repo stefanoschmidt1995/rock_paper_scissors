@@ -1,0 +1,101 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #f7f8fc, #e4ecf5);
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  form {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 400px;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 8px 10px;
+    margin: 8px 0;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  button {
+    margin: 10px;
+    padding: 10px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #357ab8;
+  }
+  
+  .rps-img {
+    width: 120px;
+    height: auto;
+    margin: 10px;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .rps-img:hover {
+    border-color: #4a90e2;
+    transform: scale(1.05);
+  }
+
+  .selected {
+    border-color: #4a90e2;
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+  }
+  
+  #play_table {
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+  }
+  
+  #win_lose {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #222;
+  }
+  
+  table {
+    margin: auto;
+    border-collapse: collapse;
+    width: 80%;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  thead {
+    background-color: #4a90e2;
+    color: white;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }

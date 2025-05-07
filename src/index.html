@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Rock Paper scissors</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -18,8 +21,7 @@
     
     }
     function make_table (choices_me, choices_opponent) {
-      if (choices_me.length != choices_me.length) return "Something funky with the lengths"
-      var i = 0;
+      if (choices_me.length != choices_opponent.length) return "Something funky with the lengths";      var i = 0;
       table_str = '<table align = "center" ><thead> <tr> <th>You</th> <th>Opponent</th></tr></thead><tbody>';
       for (const my_choice of choices_me) {
         other_choice = choices_opponent[i];
@@ -36,6 +38,10 @@
   </head>
   
   <body>
+
+    <h1>Rock Paper Scissors</h1>
+    <h2>Play with your friend!</h2>
+
     <ul id="messages"></ul>
     <form id="form">
         Your name: <input type="text" id="username"
@@ -57,21 +63,19 @@
     <table id = "play_table" border=0 style="border-collapse:collapse" cellspacing="0" cellpadding="0" hidden="hidden">
       <tr>
         <td id = 'summary_table' width=16% rowspan=2></td>
-        <td width=28%><img id = 'img_rock' src = "imgs/rock.png" onClick = "click_image(this)" class = "rps-img"></td>
-        <td width=28%><img id = 'img_paper' src = "imgs/paper.png" onClick = "click_image(this)" class = "rps-img"></td>
-        <td width=28%><img id = 'img_scissors' src = "imgs/scissors.png" onClick = "click_image(this)" class = "rps-img"></td>
-      </tr>
+        <td width=28%><img id = 'img_rock' src = "imgs/rock.png" onClick = "click_image(this)" class = "rps-img" width="120"></td>
+        <td width=28%><img id = 'img_paper' src = "imgs/paper.png" onClick = "click_image(this)" class = "rps-img" width="120"></td>
+        <td width=28%><img id = 'img_scissors' src = "imgs/scissors.png" onClick = "click_image(this)" class = "rps-img" width="120"></td>      </tr>
       <tr>
         <td id = 'win_lose'> </td>
-        <td><img id = 'opponent_choice' src = "imgs/paper.png" hidden="hidden" class = "rps-img"></td>
-        <td></td>
+        <td><img id = 'opponent_choice' src = "imgs/paper.png" hidden="hidden" class = "rps-img" width="120"></td>        <td></td>
       </tr>
     </table>
     </div>
     
 	  <script src="/socket.io/socket.io.js"></script>
 	  <script>
-	  	var debug = true;
+	  	var debug = false;
 	  	if (debug){
 	  	  document.getElementById('waiting_text').removeAttribute("hidden");
 	  	  document.getElementById('playing_text').removeAttribute("hidden");
@@ -123,11 +127,15 @@
     var choice = null;
     var opponent_choice = null;
     function click_image(img) {
-      if (choice == null){
+      if (choice == null) {
         choice = img.getAttribute("src").split('/')[1].split('.')[0];
         socket.emit('choice', choice);
         console.log('Chosen ' + choice);
-        img.border = 5
+
+        // Remove 'selected' class from all images
+        document.querySelectorAll('.rps-img').forEach(el => el.classList.remove('selected'));
+        // Add 'selected' class to the clicked image
+        img.classList.add('selected');
       }
     }
     
@@ -175,7 +183,11 @@
      
 	  </script>
 
-    
+
+    <footer>
+      Built with ☕ by Stefano, hosted by Carlo
+    </footer>
+
 
   </body>
 </html>
